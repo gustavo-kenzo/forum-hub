@@ -24,6 +24,7 @@ public class Curso {
     private String nome;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "categoria")
     private CategoriaCurso categoriaCurso;
 
     @OneToMany(mappedBy = "curso")
