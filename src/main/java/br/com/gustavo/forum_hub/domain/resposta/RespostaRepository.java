@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface RespostaRepository extends JpaRepository<Resposta, Long> {
     @Modifying
     @Query("""
@@ -14,4 +16,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Long> {
     void desmacarSolucoesDoTopico(Long topicoId);
 
     boolean existsByTopicoIdAndSolucaoTrue(Long id);
+
+
+    List<Resposta> findByTopicoIdOrderByDataCriacao(Long topicoId);
 }

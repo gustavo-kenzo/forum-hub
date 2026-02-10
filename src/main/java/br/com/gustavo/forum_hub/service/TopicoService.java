@@ -1,10 +1,9 @@
 package br.com.gustavo.forum_hub.service;
 
 import br.com.gustavo.forum_hub.domain.curso.CursoRepository;
-import br.com.gustavo.forum_hub.domain.topico.DadosCadastrarTopico;
-import br.com.gustavo.forum_hub.domain.topico.DadosDetalhamentoTopico;
-import br.com.gustavo.forum_hub.domain.topico.Topico;
-import br.com.gustavo.forum_hub.domain.topico.TopicoRepository;
+import br.com.gustavo.forum_hub.domain.resposta.DadosDetalhamentoResposta;
+import br.com.gustavo.forum_hub.domain.resposta.RespostaRepository;
+import br.com.gustavo.forum_hub.domain.topico.*;
 import br.com.gustavo.forum_hub.domain.usuario.UsuarioRepository;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
@@ -21,6 +20,7 @@ public class TopicoService {
     private TopicoRepository topicoRepository;
     private UsuarioRepository usuarioRepository;
     private CursoRepository cursoRepository;
+    private RespostaRepository respostaRepository;
 
     public Topico cadastrar(DadosCadastrarTopico dados) {
         var titulo = dados.titulo();
@@ -38,5 +38,11 @@ public class TopicoService {
     public Page<DadosDetalhamentoTopico> listar(Long cursoId, Pageable pageable) {
         var topicos = topicoRepository.findAll(cursoId, pageable);
         return topicos.map(DadosDetalhamentoTopico::new);
+    }
+
+    public DadosDetalhamentoTopicoResposta listarTopico(Long topicoId) {
+        var topico = topicoRepository.findById(topicoId).orElseThrow(() -> new ValidationException("Esse tópico não existe"));
+        var respostas = respostaRepository.findByTopicoIdOrderByDataCriacao(topicoId).stream().map(DadosDetalhamentoResposta::new).toList();
+        return new DadosDetalhamentoTopicoResposta(topico, respostas);
     }
 }
