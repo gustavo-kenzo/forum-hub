@@ -27,7 +27,7 @@ public class TopicoController {
         var topico = topicoService.cadastrar(dados);
         System.out.println(topico);
         var uri = uriBuilder.path("/topico/{id}").buildAndExpand(topico.getId()).toUri();
-        var dto = new DadosDetalhamentoTopico(topico.getId(), topico.getTitulo(), topico.getMensagem(), topico.getAutor().getNome(), topico.getCurso().getNome(), topico.getStatus(), topico.getDataCriacao());
+        var dto = new DadosDetalhamentoTopico(topico);
         System.out.println(dto);
         return ResponseEntity.created(uri).body(dto);
     }
@@ -37,6 +37,12 @@ public class TopicoController {
             @RequestParam(required = false) Long cursoId,
             @PageableDefault(page = 0, size = 10, sort = {"dataCriacao"}, direction = Sort.Direction.DESC) Pageable pageable) {
         var dadosTopicos = topicoService.listar(cursoId, pageable);
-        return ResponseEntity.ok().body(dadosTopicos);
+        return ResponseEntity.ok(dadosTopicos);
+    }
+
+    @GetMapping("/{topicoId}")
+    public ResponseEntity listarTopico(@PathVariable Long topicoId) {
+        var dadoTopico = topicoService.listarTopico(topicoId);
+        return ResponseEntity.ok(dadoTopico);
     }
 }
