@@ -4,10 +4,7 @@ import br.com.gustavo.forum_hub.domain.curso.Curso;
 import br.com.gustavo.forum_hub.domain.resposta.Resposta;
 import br.com.gustavo.forum_hub.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +32,7 @@ public class Topico {
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     @Column(nullable = false)
+    @Setter
     private Boolean status;
 
 
