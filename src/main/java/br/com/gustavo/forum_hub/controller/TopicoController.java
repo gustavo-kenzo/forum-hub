@@ -1,16 +1,16 @@
 package br.com.gustavo.forum_hub.controller;
 
-import br.com.gustavo.forum_hub.service.TopicoService;
 import br.com.gustavo.forum_hub.domain.topico.DadosCadastrarTopico;
 import br.com.gustavo.forum_hub.domain.topico.DadosDetalhamentoTopico;
+import br.com.gustavo.forum_hub.service.TopicoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -27,8 +27,16 @@ public class TopicoController {
         var topico = topicoService.cadastrar(dados);
         System.out.println(topico);
         var uri = uriBuilder.path("/topico/{id}").buildAndExpand(topico.getId()).toUri();
-        var dto = new DadosDetalhamentoTopico(topico.getTitulo(), topico.getMensagem(), topico.getAutor().getNome(), topico.getCurso().getNome(), topico.getStatus());
+        var dto = new DadosDetalhamentoTopico(topico.getId(), topico.getTitulo(), topico.getMensagem(), topico.getAutor().getNome(), topico.getCurso().getNome(), topico.getStatus(), topico.getDataCriacao());
         System.out.println(dto);
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @GetMapping
+    public ResponseEntity listar(
+            @RequestParam(required = false) Long cursoId,
+            @PageableDefault(page = 0, size = 10, sort = {"dataCriacao"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        var dadosTopicos = topicoService.listar(cursoId, pageable);
+        return ResponseEntity.ok().body(dadosTopicos);
     }
 }
