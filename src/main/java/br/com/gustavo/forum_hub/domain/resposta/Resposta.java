@@ -3,10 +3,7 @@ package br.com.gustavo.forum_hub.domain.resposta;
 import br.com.gustavo.forum_hub.domain.topico.Topico;
 import br.com.gustavo.forum_hub.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +24,7 @@ public class Resposta {
 
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
+    @Setter
     private Boolean solucao;
 
     @ManyToOne
