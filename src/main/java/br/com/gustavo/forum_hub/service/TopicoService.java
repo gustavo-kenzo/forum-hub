@@ -2,11 +2,14 @@ package br.com.gustavo.forum_hub.service;
 
 import br.com.gustavo.forum_hub.domain.curso.CursoRepository;
 import br.com.gustavo.forum_hub.domain.topico.DadosCadastrarTopico;
+import br.com.gustavo.forum_hub.domain.topico.DadosDetalhamentoTopico;
 import br.com.gustavo.forum_hub.domain.topico.Topico;
 import br.com.gustavo.forum_hub.domain.topico.TopicoRepository;
 import br.com.gustavo.forum_hub.domain.usuario.UsuarioRepository;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,5 +33,10 @@ public class TopicoService {
         var curso = cursoRepository.getReferenceById(dados.cursoId());
         var topico = new Topico(null, titulo, mensagem, LocalDateTime.now(), true, autor, curso, null);
         return topicoRepository.save(topico);
+    }
+
+    public Page<DadosDetalhamentoTopico> listar(Long cursoId, Pageable pageable) {
+        var topicos = topicoRepository.findAll(cursoId, pageable);
+        return topicos.map(DadosDetalhamentoTopico::new);
     }
 }
