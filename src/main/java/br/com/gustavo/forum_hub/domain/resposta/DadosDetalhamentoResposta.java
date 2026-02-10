@@ -1,24 +1,24 @@
 package br.com.gustavo.forum_hub.domain.resposta;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 
 public record DadosDetalhamentoResposta(
-        @NotBlank
+        Long id,
         String mensagem,
-
-        @NotBlank
         String topicoName,
-
-        @NotBlank
         String autorName,
-
-        @NotNull
         LocalDateTime dataCriacao,
-
-        @NotNull
         Boolean solucao
 ) {
+
+    public DadosDetalhamentoResposta(Resposta resposta) {
+        this(
+                resposta.getId(),
+                resposta.getMensagem(),
+                resposta.getTopico().getTitulo(),
+                resposta.getAutor().getNome(),
+                resposta.getDataCriacao(),
+                resposta.getSolucao()
+        );
+    }
 }

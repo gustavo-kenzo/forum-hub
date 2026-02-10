@@ -26,7 +26,7 @@ public class RespostaController {
         var autor = resposta.getAutor().getNome();
         var topico = resposta.getTopico().getTitulo();
 
-        var dto = new DadosDetalhamentoResposta(resposta.getMensagem(), topico, autor, resposta.getDataCriacao(), resposta.getSolucao());
+        var dto = new DadosDetalhamentoResposta(resposta);
 
         return ResponseEntity.created(uri).body(dto);
     }
