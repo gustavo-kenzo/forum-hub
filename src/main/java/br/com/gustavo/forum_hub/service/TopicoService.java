@@ -5,6 +5,7 @@ import br.com.gustavo.forum_hub.domain.resposta.DadosDetalhamentoResposta;
 import br.com.gustavo.forum_hub.domain.resposta.RespostaRepository;
 import br.com.gustavo.forum_hub.domain.topico.*;
 import br.com.gustavo.forum_hub.domain.usuario.UsuarioRepository;
+import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,5 +45,17 @@ public class TopicoService {
         var topico = topicoRepository.findById(topicoId).orElseThrow(() -> new ValidationException("Esse tópico não existe"));
         var respostas = respostaRepository.findByTopicoIdOrderByDataCriacao(topicoId).stream().map(DadosDetalhamentoResposta::new).toList();
         return new DadosDetalhamentoTopicoResposta(topico, respostas);
+    }
+
+    public DadosDetalhamentoTopico atualizarTopico(Long topicoId, Long autorId, @Valid DadosAtualizacaoTopico dados) {
+        var topico = topicoRepository.findById(topicoId).orElseThrow(() -> new ValidationException("Esse topico não existe"));
+        if (!topico.getAutor().getId().equals(autorId))
+            throw new ValidationException("Somente o autor do tópico pode alterar o tópico");
+
+        if (topicoRepository.existsByTituloAndMensagemIgnoreCase(dados.titulo(), dados.mensagem()))
+            throw new ValidationException("Tópico duplicado! Não pode repetir titulo e mensagem");
+
+        topico.atualizarTopico(dados);
+        return new DadosDetalhamentoTopico(topico);
     }
 }

@@ -1,5 +1,6 @@
 package br.com.gustavo.forum_hub.controller;
 
+import br.com.gustavo.forum_hub.domain.topico.DadosAtualizacaoTopico;
 import br.com.gustavo.forum_hub.domain.topico.DadosCadastrarTopico;
 import br.com.gustavo.forum_hub.domain.topico.DadosDetalhamentoTopico;
 import br.com.gustavo.forum_hub.service.TopicoService;
@@ -44,5 +45,16 @@ public class TopicoController {
     public ResponseEntity listarTopico(@PathVariable Long topicoId) {
         var dadoTopico = topicoService.listarTopico(topicoId);
         return ResponseEntity.ok(dadoTopico);
+    }
+
+    @PutMapping("/{topicoId}")
+    @Transactional
+    public ResponseEntity atualizarTopico(
+            @PathVariable Long topicoId,
+            @RequestParam Long autorId,
+            @RequestBody @Valid DadosAtualizacaoTopico dados
+    ) {
+        var dadosTopicoAtualizado = topicoService.atualizarTopico(topicoId,autorId,dados);
+        return ResponseEntity.ok(dadosTopicoAtualizado);
     }
 }
