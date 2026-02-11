@@ -46,4 +46,10 @@ public class Topico {
 
     @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL)
     private List<Resposta> respostas = new ArrayList<>();
+
+    public void atualizarTopico(DadosAtualizacaoTopico dados) {
+        if (dados.titulo() != null) this.titulo = dados.titulo();
+        if (dados.mensagem() != null) this.mensagem = dados.mensagem();
+        this.dataCriacao=LocalDateTime.now();
+    }
 }
