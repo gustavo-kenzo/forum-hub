@@ -56,4 +56,11 @@ public class RespostaService {
         resposta.atualizarResposta(dados);
         return new DadosDetalhamentoResposta(resposta);
     }
+
+    public void deletarResposta(Long respostaId, Long usuarioId) {
+        var resposta = respostaRepository.findById(respostaId).orElseThrow(() -> new ValidationException("Essa resposta não existe"));
+        if (!resposta.getAutor().getId().equals(usuarioId))
+            throw new ValidationException("Somente autor da resposta pode deletá-la");
+        respostaRepository.deleteById(resposta.getId());
+    }
 }
