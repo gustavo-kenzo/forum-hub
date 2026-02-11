@@ -1,5 +1,6 @@
 package br.com.gustavo.forum_hub.controller;
 
+import br.com.gustavo.forum_hub.domain.resposta.DadosAtualizacaoResposta;
 import br.com.gustavo.forum_hub.domain.resposta.DadosCadastrarResposta;
 import br.com.gustavo.forum_hub.domain.resposta.DadosDetalhamentoResposta;
 import br.com.gustavo.forum_hub.service.RespostaService;
@@ -43,6 +44,17 @@ public class RespostaController {
     public ResponseEntity desmarcarComoSolucao(@PathVariable Long respostaId, @RequestParam Long usuarioId) {
         respostaService.definirSolucao(respostaId, usuarioId, false);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{respostaId}")
+    @Transactional
+    public ResponseEntity atualizarResposta(
+            @PathVariable Long respostaId,
+            @RequestParam Long autorId,
+            @RequestBody @Valid DadosAtualizacaoResposta dados){
+
+        var dadosRespostaAtualizada= respostaService.atualizar(respostaId,autorId,dados);
+        return ResponseEntity.ok(dadosRespostaAtualizada);
     }
 
 }

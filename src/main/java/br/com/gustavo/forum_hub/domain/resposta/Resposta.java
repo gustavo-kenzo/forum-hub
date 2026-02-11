@@ -35,4 +35,8 @@ public class Resposta {
     @JoinColumn(name = "autor_id")
     private Usuario autor;
 
+    public void atualizarResposta(DadosAtualizacaoResposta dados) {
+        if (dados.mensagem() != null) this.mensagem = dados.mensagem();
+    }
+
 }

@@ -1,10 +1,9 @@
 package br.com.gustavo.forum_hub.service;
 
-import br.com.gustavo.forum_hub.domain.resposta.DadosCadastrarResposta;
-import br.com.gustavo.forum_hub.domain.resposta.Resposta;
-import br.com.gustavo.forum_hub.domain.resposta.RespostaRepository;
+import br.com.gustavo.forum_hub.domain.resposta.*;
 import br.com.gustavo.forum_hub.domain.topico.TopicoRepository;
 import br.com.gustavo.forum_hub.domain.usuario.UsuarioRepository;
+import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,5 +45,15 @@ public class RespostaService {
         boolean existeSolucao = respostaRepository.existsByTopicoIdAndSolucaoTrue(topico.getId());
         var topicoResolvido = !existeSolucao;
         topico.setStatus(topicoResolvido);
+    }
+
+    public DadosDetalhamentoResposta atualizar(Long respostaId, Long autorId, @Valid DadosAtualizacaoResposta dados) {
+        var resposta = respostaRepository.findById(respostaId).orElseThrow(() -> new ValidationException("Essa resposta não existe"));
+
+        if (!resposta.getAutor().getId().equals(autorId))
+            throw new ValidationException("Somente o autor da resposta pode alterar o conteúdo dessa resposta");
+
+        resposta.atualizarResposta(dados);
+        return new DadosDetalhamentoResposta(resposta);
     }
 }
