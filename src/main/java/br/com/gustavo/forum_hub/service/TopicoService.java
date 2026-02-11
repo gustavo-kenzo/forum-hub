@@ -58,4 +58,11 @@ public class TopicoService {
         topico.atualizarTopico(dados);
         return new DadosDetalhamentoTopico(topico);
     }
+
+    public void deletarTopico(Long topicoId, Long usuarioId) {
+        var topico = topicoRepository.findById(topicoId).orElseThrow(() -> new ValidationException("Esse tópico não existe. Não foi possivel deletar"));
+        if (!topico.getAutor().getId().equals(usuarioId))
+            throw new ValidationException("Somente o autor do tópico pode deletar o tópico");
+        topicoRepository.deleteById(topico.getId());
+    }
 }

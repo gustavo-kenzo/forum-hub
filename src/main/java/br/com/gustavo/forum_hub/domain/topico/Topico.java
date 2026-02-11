@@ -44,7 +44,7 @@ public class Topico {
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resposta> respostas = new ArrayList<>();
 
     public void atualizarTopico(DadosAtualizacaoTopico dados) {

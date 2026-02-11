@@ -54,7 +54,14 @@ public class TopicoController {
             @RequestParam Long autorId,
             @RequestBody @Valid DadosAtualizacaoTopico dados
     ) {
-        var dadosTopicoAtualizado = topicoService.atualizarTopico(topicoId,autorId,dados);
+        var dadosTopicoAtualizado = topicoService.atualizarTopico(topicoId, autorId, dados);
         return ResponseEntity.ok(dadosTopicoAtualizado);
+    }
+
+    @DeleteMapping("/{topicoId}")
+    @Transactional
+    public ResponseEntity deletarTopico(@PathVariable Long topicoId, @RequestParam Long usuarioId) {
+        topicoService.deletarTopico(topicoId, usuarioId);
+        return ResponseEntity.noContent().build();
     }
 }
