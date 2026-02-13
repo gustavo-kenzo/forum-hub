@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -51,7 +52,7 @@ public class TopicoController {
     @Transactional
     public ResponseEntity atualizarTopico(
             @PathVariable Long topicoId,
-            @RequestParam Long autorId,
+            @AuthenticationPrincipal(expression = "id") Long autorId,
             @RequestBody @Valid DadosAtualizacaoTopico dados
     ) {
         var dadosTopicoAtualizado = topicoService.atualizarTopico(topicoId, autorId, dados);
@@ -60,7 +61,7 @@ public class TopicoController {
 
     @DeleteMapping("/{topicoId}")
     @Transactional
-    public ResponseEntity deletarTopico(@PathVariable Long topicoId, @RequestParam Long usuarioId) {
+    public ResponseEntity deletarTopico(@PathVariable Long topicoId, @AuthenticationPrincipal(expression = "id") Long usuarioId) {
         topicoService.deletarTopico(topicoId, usuarioId);
         return ResponseEntity.noContent().build();
     }
