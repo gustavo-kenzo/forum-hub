@@ -7,6 +7,7 @@ import br.com.gustavo.forum_hub.service.RespostaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,14 +35,14 @@ public class RespostaController {
 
     @PutMapping("/{respostaId}/solucao")
     @Transactional
-    public ResponseEntity marcarComoSolucao(@PathVariable Long respostaId, @RequestParam Long usuarioId) {
+    public ResponseEntity marcarComoSolucao(@PathVariable Long respostaId, @AuthenticationPrincipal(expression = "id") Long usuarioId) {
         respostaService.definirSolucao(respostaId, usuarioId, true);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{respostaId}/solucao")
     @Transactional
-    public ResponseEntity desmarcarComoSolucao(@PathVariable Long respostaId, @RequestParam Long usuarioId) {
+    public ResponseEntity desmarcarComoSolucao(@PathVariable Long respostaId, @AuthenticationPrincipal(expression = "id") Long usuarioId) {
         respostaService.definirSolucao(respostaId, usuarioId, false);
         return ResponseEntity.noContent().build();
     }
@@ -50,17 +51,17 @@ public class RespostaController {
     @Transactional
     public ResponseEntity atualizarResposta(
             @PathVariable Long respostaId,
-            @RequestParam Long autorId,
-            @RequestBody @Valid DadosAtualizacaoResposta dados){
+            @AuthenticationPrincipal(expression = "id") Long autorId,
+            @RequestBody @Valid DadosAtualizacaoResposta dados) {
 
-        var dadosRespostaAtualizada= respostaService.atualizar(respostaId,autorId,dados);
+        var dadosRespostaAtualizada = respostaService.atualizar(respostaId, autorId, dados);
         return ResponseEntity.ok(dadosRespostaAtualizada);
     }
 
     @DeleteMapping("/{respostaId}")
     @Transactional
-    public ResponseEntity deletarResposta(@PathVariable Long respostaId, @RequestParam Long usuarioId){
-        respostaService.deletarResposta(respostaId,usuarioId);
+    public ResponseEntity deletarResposta(@PathVariable Long respostaId, @AuthenticationPrincipal(expression = "id") Long usuarioId) {
+        respostaService.deletarResposta(respostaId, usuarioId);
         return ResponseEntity.noContent().build();
     }
 
