@@ -13,7 +13,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Long> {
             set r.solucao = false
             where r.topico.id = :topicoId
             """)
-    void desmacarSolucoesDoTopico(Long topicoId);
+    void desmacarSolucoesRespostaDoTopico(Long topicoId);
 
     boolean existsByTopicoIdAndSolucaoTrue(Long id);
 
