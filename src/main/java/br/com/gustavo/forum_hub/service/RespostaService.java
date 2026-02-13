@@ -37,14 +37,23 @@ public class RespostaService {
         if (!topico.getAutor().getId().equals(usuarioId))
             throw new ValidationException("Apenas o autor do tópico pode marcar resposta como solucao");
 
-        //Desmarca qualquer solucao existente para evitar solucoes duplicadas
-        if (ehSolucao)
-            respostaRepository.desmacarSolucoesDoTopico(topico.getId());
+        //Impede alternância indevida
+        if (resposta.getSolucao().equals(ehSolucao))
+            return;
 
-        resposta.setSolucao(ehSolucao);
-        boolean existeSolucao = respostaRepository.existsByTopicoIdAndSolucaoTrue(topico.getId());
-        var topicoResolvido = !existeSolucao;
-        topico.setStatus(topicoResolvido);
+        //Marca solucao
+        if (ehSolucao) {
+            //Se tem solucao topico fechado (false)
+            respostaRepository.desmacarSolucoesRespostaDoTopico(topico.getId());
+            resposta.setSolucao(true);
+            topico.setStatus(false);
+        }
+        //Desmarca solucao
+        else {
+            //Se nao tem solucao topico aberto (true)
+            resposta.setSolucao(false);
+            topico.setStatus(true);
+        }
     }
 
     public DadosDetalhamentoResposta atualizar(Long respostaId, Long autorId, @Valid DadosAtualizacaoResposta dados) {
